@@ -1,0 +1,280 @@
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+    width: 260px;
+    height: 100vh;
+
+    box-sizing: border-box;
+
+    background: linear-gradient(
+        180deg,
+        #0B1120,
+        #111827,
+        #1E293B
+    );
+
+    position: fixed;
+
+    left: 0;
+    top: 0;
+
+    padding: 25px 18px;
+
+    color: white;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    box-shadow: 6px 0 20px rgba(0, 0, 0, 0.25);
+
+    z-index: 1000;
+}
+
+
+/* =========================
+   LOGO
+========================= */
+
+.logo {
+    text-align: center;
+
+    margin-bottom: 40px;
+
+    padding-bottom: 25px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo h2 {
+    color: #38BDF8;
+
+    font-size: 28px;
+
+    font-weight: 700;
+
+    margin: 0 0 10px;
+}
+
+.logo p {
+    color: #CBD5E1;
+
+    font-size: 14px;
+
+    line-height: 20px;
+
+    margin: 0;
+}
+
+
+/* =========================
+   MENU
+========================= */
+
+.sidebar ul {
+    list-style: none;
+
+    padding: 0;
+
+    margin: 0;
+}
+
+.sidebar li {
+    list-style: none;
+
+    padding: 0;
+
+    margin-bottom: 12px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+.navItem {
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    width: 100%;
+
+    padding: 15px 18px;
+
+    border-radius: 14px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+
+    color: #E2E8F0;
+
+    font-size: 15px;
+
+    font-weight: 500;
+
+    text-decoration: none;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================
+   ICON SIZE
+========================= */
+
+.navItem svg {
+    font-size: 20px;
+
+    min-width: 20px;
+}
+
+
+/* =========================
+   ICON COLORS
+========================= */
+
+.dashboardIcon {
+    color: #FFFFFF;
+}
+
+.projectsIcon {
+    color: #3B82F6;
+}
+
+.safetyIcon {
+    color: #F59E0B;
+}
+
+.aiIcon {
+    color: #A855F7;
+}
+
+
+/* Risk Center - RED SHIELD */
+
+.riskCenterIcon {
+    color: #EF4444;
+
+    font-size: 20px;
+
+    min-width: 20px;
+}
+
+.reportsIcon {
+    color: #F97316;
+}
+
+
+/* =========================
+   HOVER
+========================= */
+
+.navItem:hover {
+    background: #2563EB;
+
+    color: white;
+
+    transform: translateX(4px);
+}
+
+
+/* =========================
+   ACTIVE
+========================= */
+
+.navItem.active {
+    background: linear-gradient(
+        90deg,
+        #2563EB,
+        #3B82F6
+    );
+
+    color: white;
+
+    box-shadow:
+        0 8px 20px rgba(37, 99, 235, 0.4);
+}
+
+
+/* =========================
+   ACTIVE ICON COLORS
+========================= */
+
+.navItem.active .dashboardIcon {
+    color: #FFFFFF;
+}
+
+.navItem.active .projectsIcon {
+    color: #60A5FA;
+}
+
+.navItem.active .safetyIcon {
+    color: #FBBF24;
+}
+
+.navItem.active .aiIcon {
+    color: #C084FC;
+}
+
+.navItem.active .riskCenterIcon {
+    color: #F87171;
+}
+
+.navItem.active .reportsIcon {
+    color: #FB923C;
+}
+
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: #334155;
+
+    border-radius: 10px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 800px) {
+
+    .sidebar {
+        width: 220px;
+    }
+
+    .navItem {
+        padding: 13px 14px;
+
+        gap: 12px;
+
+        font-size: 14px;
+    }
+
+    .logo h2 {
+        font-size: 24px;
+    }
+
+    .logo p {
+        font-size: 12px;
+    }
+}

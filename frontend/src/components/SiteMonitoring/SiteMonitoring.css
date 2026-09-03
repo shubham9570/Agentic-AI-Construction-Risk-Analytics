@@ -1,0 +1,109 @@
+.siteMonitoring{
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:20px;
+
+    margin-top:30px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+}
+
+.siteMonitoring h2{
+
+    color:#0F172A;
+
+    margin-bottom:25px;
+
+}
+
+.monitorGrid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+
+}
+
+.monitorCard{
+
+    padding:25px;
+
+    border-radius:18px;
+
+    color:white;
+
+    transition:.3s;
+
+}
+
+.monitorCard:hover{
+
+    transform:translateY(-6px);
+
+}
+
+.monitorIcon{
+
+    font-size:32px;
+
+    margin-bottom:15px;
+
+}
+
+.monitorCard h3{
+
+    font-size:18px;
+
+    margin-bottom:12px;
+
+}
+
+.monitorCard h1{
+
+    font-size:36px;
+
+    margin-bottom:10px;
+
+}
+
+.monitorCard p{
+
+    opacity:.9;
+
+}
+
+.red{
+
+    background:linear-gradient(135deg,#EF4444,#DC2626);
+
+}
+
+.orange{
+
+    background:linear-gradient(135deg,#F97316,#EA580C);
+
+}
+
+.yellow{
+
+    background:linear-gradient(135deg,#F59E0B,#D97706);
+
+}
+
+.green{
+
+    background:linear-gradient(135deg,#22C55E,#16A34A);
+
+}
+
+.blue{
+
+    background:linear-gradient(135deg,#2563EB,#1D4ED8);
+
+}

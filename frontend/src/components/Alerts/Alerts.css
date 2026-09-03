@@ -1,0 +1,201 @@
+.liveAlerts {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+
+/* Header */
+
+.alertsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.alertsHeader h2 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 20px;
+}
+
+.alertsHeader p {
+    margin: 6px 0 0;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.activeAlerts {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 7px 12px;
+
+    background: #fee2e2;
+    color: #dc2626;
+
+    border-radius: 15px;
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.activeAlerts svg {
+    font-size: 7px;
+}
+
+
+/* Alert List */
+
+.alertsList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+/* Alert */
+
+.alertItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 14px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 13px;
+
+    transition: 0.25s;
+}
+
+.alertItem:hover {
+    transform: translateX(4px);
+    box-shadow: 0 5px 15px rgba(15, 23, 42, 0.07);
+}
+
+
+/* Icons */
+
+.alertIcon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+}
+
+.critical .alertIcon {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+.warning .alertIcon {
+    background: #fff7ed;
+    color: #f97316;
+}
+
+.info .alertIcon {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.success .alertIcon {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+
+/* Content */
+
+.alertContent {
+    flex: 1;
+}
+
+.alertTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.alertTitle strong {
+    color: #334155;
+    font-size: 13px;
+}
+
+.alertTitle span {
+    padding: 3px 7px;
+    border-radius: 8px;
+
+    font-size: 8px;
+    font-weight: 700;
+}
+
+.critical .alertTitle span {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.warning .alertTitle span {
+    background: #ffedd5;
+    color: #ea580c;
+}
+
+.info .alertTitle span {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.success .alertTitle span {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.alertContent p {
+    margin: 4px 0;
+    color: #64748b;
+    font-size: 11px;
+}
+
+.alertContent small {
+    color: #94a3b8;
+    font-size: 10px;
+}
+
+
+/* Footer */
+
+.alertsFooter {
+    margin-top: 15px;
+    padding-top: 12px;
+
+    border-top: 1px solid #f1f5f9;
+
+    color: #94a3b8;
+    font-size: 10px;
+}
+
+
+/* Responsive */
+
+@media (max-width: 600px) {
+
+    .alertsHeader {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .alertTitle {
+        flex-wrap: wrap;
+    }
+}

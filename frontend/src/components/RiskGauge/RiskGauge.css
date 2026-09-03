@@ -1,0 +1,88 @@
+.riskGauge{
+
+    background:#fff;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    height:100%;
+
+}
+
+.riskGauge h2{
+
+    margin-bottom:25px;
+
+    color:#0F172A;
+
+}
+
+.circle{
+
+    width:220px;
+
+    height:220px;
+
+    border-radius:50%;
+
+    background:conic-gradient(
+        #F59E0B 0% 72%,
+        #E5E7EB 72% 100%
+    );
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+.innerCircle{
+
+    width:170px;
+
+    height:170px;
+
+    background:white;
+
+    border-radius:50%;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.innerCircle h1{
+
+    font-size:45px;
+
+    color:#F59E0B;
+
+}
+
+.innerCircle p{
+
+    margin-top:10px;
+
+    font-weight:600;
+
+    color:#475569;
+
+}

@@ -1,0 +1,195 @@
+/* =========================================================
+   DASHBOARD MAIN
+========================================================= */
+
+.dashboard-main {
+  margin-left: 260px;
+
+  width: calc(100% - 260px);
+
+  min-height: 100vh;
+
+  background: #f3f7fb;
+
+  box-sizing: border-box;
+
+  overflow-x: hidden;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.content {
+  width: 100%;
+
+  padding: 30px;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.page-header {
+  margin-bottom: 25px;
+}
+
+
+.page-header h1 {
+  margin: 0 0 10px 0;
+
+  color: #172033;
+
+  font-size: 32px;
+
+  font-weight: 800;
+}
+
+
+.page-header p {
+  margin: 0;
+
+  max-width: 1100px;
+
+  color: #64748b;
+
+  font-size: 16px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   COMMON DASHBOARD ROW
+========================================================= */
+
+.dashboard-row {
+  display: grid;
+
+  gap: 25px;
+
+  width: 100%;
+
+  margin-top: 30px;
+
+  align-items: stretch;
+}
+
+
+/* =========================================================
+   PROJECT PROGRESS + RISK
+========================================================= */
+
+.progress-risk-row {
+  grid-template-columns: minmax(0, 2fr) minmax(360px, 1fr);
+}
+
+
+/* =========================================================
+   SITE RISK + MILESTONES
+========================================================= */
+
+.risk-milestone-row {
+  grid-template-columns: minmax(0, 2fr) minmax(360px, 1fr);
+}
+
+
+/* =========================================================
+   RISK TREND + PROJECTS
+========================================================= */
+
+.trend-project-row {
+  grid-template-columns: minmax(0, 2fr) minmax(360px, 1fr);
+}
+
+
+/* =========================================================
+   BOTTOM SECTION
+========================================================= */
+
+.bottom-section {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 25px;
+
+  margin-top: 30px;
+
+  width: 100%;
+}
+
+
+/* =========================================================
+   IMPORTANT
+   Prevent children from overflowing their grid columns
+========================================================= */
+
+.dashboard-row > *,
+.bottom-section > * {
+  min-width: 0;
+
+  width: 100%;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .progress-risk-row,
+  .risk-milestone-row,
+  .trend-project-row {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 1000px) {
+
+  .bottom-section {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 900px) {
+
+  .dashboard-main {
+    margin-left: 0;
+
+    width: 100%;
+  }
+
+  .content {
+    padding: 20px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .content {
+    padding: 15px;
+  }
+
+  .page-header h1 {
+    font-size: 25px;
+  }
+
+  .page-header p {
+    font-size: 14px;
+  }
+
+}

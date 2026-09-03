@@ -1,0 +1,380 @@
+/* =========================================================
+   DASHBOARD KPI CARDS
+========================================================= */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+  width: 100%;
+}
+
+
+/* =========================================================
+   BASE CARD
+========================================================= */
+
+.card {
+  position: relative;
+  overflow: hidden;
+
+  min-height: 220px;
+
+  padding: 25px;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+
+  box-shadow:
+    0 8px 24px rgba(15, 23, 42, 0.06);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+/* Hover */
+
+.card:hover {
+  transform: translateY(-6px);
+
+  box-shadow:
+    0 16px 35px rgba(15, 23, 42, 0.10);
+}
+
+
+/* =========================================================
+   TOP SECTION
+========================================================= */
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 22px;
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.iconBox {
+  width: 56px;
+  height: 56px;
+
+  border-radius: 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 24px;
+
+  transition: transform 0.25s ease;
+}
+
+
+.card:hover .iconBox {
+  transform: scale(1.08);
+}
+
+
+/* =========================================================
+   RISK
+========================================================= */
+
+.riskIcon {
+  color: #dc2626;
+  background: #fee2e2;
+}
+
+
+/* =========================================================
+   SAFETY
+========================================================= */
+
+.safetyIcon {
+  color: #16a34a;
+  background: #dcfce7;
+}
+
+
+/* =========================================================
+   HAZARD
+========================================================= */
+
+.hazardIcon {
+  color: #d97706;
+  background: #fef3c7;
+}
+
+
+/* =========================================================
+   ALERT
+========================================================= */
+
+.alertIcon {
+  color: #2563eb;
+  background: #dbeafe;
+}
+
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.card-status {
+  padding: 6px 10px;
+
+  border-radius: 20px;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.4px;
+}
+
+
+/* Risk */
+
+.risk-status {
+  color: #dc2626;
+  background: #fee2e2;
+}
+
+
+/* Safety */
+
+.safety-status {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+
+/* Hazard */
+
+.hazard-status {
+  color: #b45309;
+  background: #fef3c7;
+}
+
+
+/* Alerts */
+
+.alert-status {
+  color: #2563eb;
+  background: #dbeafe;
+}
+
+
+/* =========================================================
+   CARD TEXT
+========================================================= */
+
+.card h4 {
+  margin: 0 0 8px 0;
+
+  color: #64748b;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+
+.card h2 {
+  margin: 0 0 8px 0;
+
+  color: #172033;
+
+  font-size: 36px;
+  font-weight: 800;
+
+  line-height: 1.1;
+}
+
+
+.card p {
+  margin: 0;
+
+  color: #334155;
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+
+.card-info {
+  display: block;
+
+  margin-top: 10px;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   BOTTOM ACCENT LINE
+========================================================= */
+
+.card-line {
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+  height: 4px;
+
+  border-radius: 0 0 20px 20px;
+}
+
+
+/* Risk */
+
+.risk-line {
+  background: #ef4444;
+}
+
+
+/* Safety */
+
+.safety-line {
+  background: #22c55e;
+}
+
+
+/* Hazard */
+
+.hazard-line {
+  background: #f59e0b;
+}
+
+
+/* Alerts */
+
+.alert-line {
+  background: #3b82f6;
+}
+
+
+/* =========================================================
+   SOFT BACKGROUND GLOW
+========================================================= */
+
+.risk::after {
+  content: "";
+
+  position: absolute;
+
+  width: 100px;
+  height: 100px;
+
+  right: -45px;
+  top: -45px;
+
+  background: #fee2e2;
+
+  border-radius: 50%;
+
+  opacity: 0.35;
+
+  pointer-events: none;
+}
+
+
+.safety::after {
+  content: "";
+
+  position: absolute;
+
+  width: 100px;
+  height: 100px;
+
+  right: -45px;
+  top: -45px;
+
+  background: #dcfce7;
+
+  border-radius: 50%;
+
+  opacity: 0.35;
+
+  pointer-events: none;
+}
+
+
+.hazard::after {
+  content: "";
+
+  position: absolute;
+
+  width: 100px;
+  height: 100px;
+
+  right: -45px;
+  top: -45px;
+
+  background: #fef3c7;
+
+  border-radius: 50%;
+
+  opacity: 0.35;
+
+  pointer-events: none;
+}
+
+
+.alerts::after {
+  content: "";
+
+  position: absolute;
+
+  width: 100px;
+  height: 100px;
+
+  right: -45px;
+  top: -45px;
+
+  background: #dbeafe;
+
+  border-radius: 50%;
+
+  opacity: 0.35;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+@media (max-width: 650px) {
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    min-height: auto;
+  }
+
+}

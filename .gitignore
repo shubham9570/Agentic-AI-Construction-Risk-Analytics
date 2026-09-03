@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Python virtual environment
+backend/venv/
+backend/.venv/
+
+# Environment variables
+.env
+.env.*
+backend/.env
+frontend/.env
+
+# Node
+frontend/node_modules/
+node_modules/
+
+# Vite build
+frontend/dist/
+
+# Python cache
+.pytest_cache/
+
+# IDE
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Generated/uploaded files
+uploads/*
+reports/*
+
+# Temporary ML files
+*.tmp
+*.cache

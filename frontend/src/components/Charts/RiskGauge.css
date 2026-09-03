@@ -1,0 +1,43 @@
+.risk-card {
+
+  background: white;
+
+  border-radius: 20px;
+
+  padding: 25px;
+
+  text-align: center;
+
+  box-shadow: 0 5px 15px rgba(0,0,0,.08);
+
+}
+
+.circle {
+
+  width: 220px;
+
+  height: 220px;
+
+  border-radius: 50%;
+
+  border: 15px solid #F59E0B;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  flex-direction: column;
+
+  margin: 20px auto;
+
+}
+
+.circle h1 {
+
+  color: #F59E0B;
+
+  font-size: 42px;
+
+}

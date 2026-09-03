@@ -1,0 +1,229 @@
+.riskTrend {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 28px;
+    margin-top: 30px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+
+/* Header */
+
+.riskTrendHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.riskTrendHeader h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    color: #0f172a;
+    font-size: 22px;
+}
+
+.riskTrendHeader h2 svg {
+    color: #2563eb;
+}
+
+.riskTrendHeader p {
+    margin: 7px 0 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.trendStatus {
+    background: #eff6ff;
+    color: #2563eb;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+/* Summary */
+
+.trendSummary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.trendSummary div {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.trendSummary span {
+    display: block;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.trendSummary strong {
+    display: block;
+    margin-top: 5px;
+    color: #0f172a;
+    font-size: 22px;
+}
+
+.trendIncrease {
+    display: grid !important;
+    grid-template-columns: auto 1fr;
+    column-gap: 7px;
+}
+
+.trendIncrease svg {
+    grid-row: span 2;
+    align-self: center;
+    color: #ef4444;
+}
+
+.trendIncrease strong {
+    color: #ef4444;
+}
+
+
+/* Chart */
+
+.riskChart {
+    display: flex;
+    height: 300px;
+}
+
+.yAxis {
+    width: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 30px;
+    color: #94a3b8;
+    font-size: 11px;
+    text-align: right;
+}
+
+.chartArea {
+    position: relative;
+    flex: 1;
+    margin-left: 15px;
+    margin-bottom: 30px;
+}
+
+.gridLine {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border-top: 1px dashed #e2e8f0;
+}
+
+.line100 {
+    top: 0;
+}
+
+.line80 {
+    top: 20%;
+}
+
+.line60 {
+    top: 40%;
+}
+
+.line40 {
+    top: 60%;
+}
+
+.line20 {
+    top: 80%;
+}
+
+
+/* SVG */
+
+.trendSvg {
+    position: absolute;
+    width: 100%;
+    height: 250px;
+    left: 0;
+    top: 0;
+    overflow: visible;
+}
+
+
+/* X Axis */
+
+.xAxis {
+    position: absolute;
+    bottom: -25px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    color: #94a3b8;
+    font-size: 11px;
+}
+
+
+/* Footer */
+
+.trendFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.trendFooter div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.legendDot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #2563eb;
+}
+
+.trendFooter p {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+
+/* Responsive */
+
+@media (max-width: 700px) {
+
+    .riskTrendHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .trendSummary {
+        grid-template-columns: 1fr;
+    }
+
+    .riskChart {
+        height: 250px;
+    }
+
+    .trendFooter {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}

@@ -1,0 +1,393 @@
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+  height: 80px;
+
+  background: white;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 0 40px;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  position: relative;
+
+  z-index: 9999;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   TITLE
+========================= */
+
+.navbar-title h2 {
+  margin: 0;
+
+  color: #1e293b;
+
+  font-size: 22px;
+
+  font-weight: 700;
+}
+
+.navbar-title p {
+  margin: 5px 0 0;
+
+  color: #64748b;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   RIGHT SIDE
+========================= */
+
+.nav-right {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+}
+
+
+/* =========================
+   MENU
+========================= */
+
+.navbar-menu {
+  position: relative;
+}
+
+
+/* =========================
+   BUTTON
+========================= */
+
+.navbar-button {
+  width: 45px;
+
+  height: 45px;
+
+  border: none;
+
+  background: transparent;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+
+  position: relative;
+
+  color: #2563eb;
+
+  font-size: 22px;
+}
+
+.navbar-button:hover {
+  background: #eff6ff;
+}
+
+
+/* =========================
+   NOTIFICATION NUMBER
+========================= */
+
+.notification-count {
+  position: absolute;
+
+  top: 3px;
+
+  right: 2px;
+
+  background: #ef4444;
+
+  color: white;
+
+  width: 18px;
+
+  height: 18px;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 10px;
+
+  font-weight: bold;
+
+  border: 2px solid white;
+}
+
+
+/* =========================
+   DROPDOWN
+========================= */
+
+.navbar-dropdown {
+  position: absolute;
+
+  top: 55px;
+
+  right: 0;
+
+  background: white;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 12px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+  z-index: 10000;
+
+  overflow: hidden;
+}
+
+
+/* =========================
+   NOTIFICATION DROPDOWN
+========================= */
+
+.notification-dropdown {
+  width: 350px;
+}
+
+.notification-dropdown h3 {
+  margin: 0;
+
+  padding: 18px;
+
+  color: #1e293b;
+
+  font-size: 17px;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+
+/* =========================
+   NOTIFICATION
+========================= */
+
+.notification {
+  padding: 15px 18px;
+
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.notification strong {
+  display: block;
+
+  color: #1e293b;
+
+  font-size: 13px;
+
+  margin-bottom: 5px;
+}
+
+.notification p {
+  margin: 0 0 5px;
+
+  color: #64748b;
+
+  font-size: 11px;
+
+  line-height: 17px;
+}
+
+.notification small {
+  color: #94a3b8;
+
+  font-size: 10px;
+}
+
+
+/* =========================
+   VIEW ALL
+========================= */
+
+.view-all-button {
+  width: 100%;
+
+  padding: 14px;
+
+  border: none;
+
+  background: #f8fafc;
+
+  color: #2563eb;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.view-all-button:hover {
+  background: #eff6ff;
+}
+
+
+/* =========================
+   PROFILE DROPDOWN
+========================= */
+
+.profile-dropdown {
+  width: 260px;
+
+  padding: 10px 0;
+}
+
+
+/* =========================
+   PROFILE TOP
+========================= */
+
+.profile-top {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 15px 18px;
+}
+
+.large-profile-icon {
+  font-size: 42px;
+
+  color: #2563eb;
+}
+
+.profile-top h3 {
+  margin: 0;
+
+  color: #1e293b;
+
+  font-size: 14px;
+}
+
+.profile-top p {
+  margin: 4px 0 0;
+
+  color: #64748b;
+
+  font-size: 11px;
+}
+
+
+/* =========================
+   LINE
+========================= */
+
+.profile-dropdown hr {
+  border: none;
+
+  border-top: 1px solid #e2e8f0;
+
+  margin: 5px 0;
+}
+
+
+/* =========================
+   PROFILE BUTTONS
+========================= */
+
+.profile-button {
+  width: 100%;
+
+  padding: 12px 18px;
+
+  border: none;
+
+  background: white;
+
+  text-align: left;
+
+  color: #475569;
+
+  font-size: 12px;
+
+  cursor: pointer;
+}
+
+.profile-button:hover {
+  background: #f8fafc;
+
+  color: #2563eb;
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+.logout-button {
+  width: 100%;
+
+  padding: 12px 18px;
+
+  border: none;
+
+  background: white;
+
+  text-align: left;
+
+  color: #ef4444;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: #fef2f2;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+  .navbar {
+    padding: 0 20px;
+  }
+
+  .navbar-title h2 {
+    font-size: 17px;
+  }
+
+  .navbar-title p {
+    font-size: 11px;
+  }
+
+  .notification-dropdown {
+    width: 300px;
+
+    right: -70px;
+  }
+}

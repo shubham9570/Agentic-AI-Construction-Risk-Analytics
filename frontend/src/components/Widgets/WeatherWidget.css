@@ -1,0 +1,55 @@
+.widget{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+}
+
+.widget-header{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    margin-bottom:15px;
+
+}
+
+.widget-icon{
+
+    font-size:24px;
+
+    color:#2563EB;
+
+}
+
+.widget h2{
+
+    margin:15px 0;
+
+}
+
+.high-risk{
+
+    display:inline-block;
+
+    margin-top:15px;
+
+    padding:8px 15px;
+
+    border-radius:20px;
+
+    background:#FEE2E2;
+
+    color:#DC2626;
+
+    font-weight:600;
+
+}
