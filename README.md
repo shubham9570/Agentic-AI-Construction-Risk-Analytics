@@ -6,7 +6,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)](https://fastapi.tiangolo.com)
 [![React 19](https://img.shields.io/badge/React-19.2-61DAFB.svg)](https://react.dev)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-336791.svg)](https://neon.tech)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](#-license)
+
 
 A full-stack monorepo delivering real-time risk intelligence, AI-driven safety monitoring, and predictive analytics for construction sites. The platform combines a React 19 dashboard with a FastAPI backend, backed by Neon PostgreSQL and seeded from historical project + weather datasets.
 
@@ -397,12 +397,6 @@ The frontend delivers 8 routed pages:
 3. Commit: `git commit -m "feat: add your feature"`
 4. Push: `git push origin feat/your-feature`
 5. Open a Pull Request
-
----
-
-## 📄 License
-
-MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
