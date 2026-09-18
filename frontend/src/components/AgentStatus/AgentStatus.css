@@ -44,4 +44,32 @@
 
     font-weight:600;
 
+    white-space:nowrap;
+
+    flex-shrink:0;
+
+}
+
+@media (max-width: 650px) {
+
+    .agent-card{
+
+        padding:18px;
+
+    }
+
+    .agent-row{
+
+        gap:10px;
+
+    }
+
+    .status{
+
+        padding:6px 12px;
+
+        font-size:12px;
+
+    }
+
 }

@@ -5,12 +5,91 @@ import {
   FaBell,
   FaHardHat,
   FaShieldAlt,
-  FaCheckCircle,
-  FaArrowUp,
-  FaArrowDown
+  FaCheckCircle
 } from "react-icons/fa";
 
+import { endpoints } from "../../api/client";
+import { useApiAll } from "../../api/useApi";
+import { ErrorState, Skeleton } from "../States/States";
+
+const SUMMARY_PRESETS = [
+  { icon: <FaExclamationTriangle />, iconClass: "high", valueClass: "highText" },
+  { icon: <FaBell />, iconClass: "warning", valueClass: "warningText" },
+  { icon: <FaHardHat />, iconClass: "violation", valueClass: "violationText" },
+  { icon: <FaShieldAlt />, iconClass: "safe", valueClass: "safeText" },
+];
+
+const SUMMARY_SUBTITLES = {
+  "High Risk Zones": "Immediate attention",
+  "Active Hazards": "Detected today",
+  "Safety Violations": "PPE & site violations",
+  "Safe Zones": "Operating normally",
+};
+
+const INCIDENT_ICONS = {
+  triangle: { icon: <FaExclamationTriangle />, iconClass: "danger" },
+  bell: { icon: <FaBell />, iconClass: "warning" },
+  hardhat: { icon: <FaHardHat />, iconClass: "equipment" },
+  check: { icon: <FaCheckCircle />, iconClass: "safe" },
+};
+
+function incidentVisual(incident, index) {
+  const preset = INCIDENT_ICONS[incident.icon_key];
+  if (preset) return preset;
+  const fallbacks = [
+    { icon: <FaExclamationTriangle />, iconClass: "danger" },
+    { icon: <FaBell />, iconClass: "warning" },
+    { icon: <FaHardHat />, iconClass: "equipment" },
+    { icon: <FaCheckCircle />, iconClass: "safe" },
+  ];
+  return fallbacks[index % fallbacks.length];
+}
+
 function RiskMonitoring() {
+  const { results, loading, error, retry } = useApiAll([
+    endpoints.riskSummary,
+    endpoints.incidents,
+    endpoints.aiSiteStatus,
+  ]);
+
+  if (loading) {
+    return (
+      <section className="riskMonitoring">
+        <div className="riskHeader">
+          <div>
+            <h2>
+              <FaExclamationTriangle />
+              Site Risk Monitoring
+            </h2>
+            <p>Real-time overview of construction site safety and hazards</p>
+          </div>
+        </div>
+        <Skeleton lines={5} />
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="riskMonitoring">
+        <div className="riskHeader">
+          <div>
+            <h2>
+              <FaExclamationTriangle />
+              Site Risk Monitoring
+            </h2>
+            <p>Real-time overview of construction site safety and hazards</p>
+          </div>
+        </div>
+        <ErrorState message={error} onRetry={retry} />
+      </section>
+    );
+  }
+
+  const [summary, incidents, siteStatus] = results;
+  const summaryRows = Array.isArray(summary) ? summary : [];
+  const incidentRows = Array.isArray(incidents) ? incidents : [];
+
   return (
     <section className="riskMonitoring">
 
@@ -44,84 +123,29 @@ function RiskMonitoring() {
 
           <h3>Risk Summary</h3>
 
-          <div className="riskRow">
+          {summaryRows.map((row, index) => {
+            const preset = SUMMARY_PRESETS[index % SUMMARY_PRESETS.length];
+            return (
+              <div className="riskRow" key={row.id ?? index}>
 
-            <div className="riskLabel">
-              <span className="riskIcon high">
-                <FaExclamationTriangle />
-              </span>
+                <div className="riskLabel">
+                  <span className={`riskIcon ${preset.iconClass}`}>
+                    {preset.icon}
+                  </span>
 
-              <div>
-                <strong>High Risk Zones</strong>
-                <small>Immediate attention</small>
+                  <div>
+                    <strong>{row.label}</strong>
+                    <small>{SUMMARY_SUBTITLES[row.label] || row.severity}</small>
+                  </div>
+                </div>
+
+                <div className={`riskValue ${preset.valueClass}`}>
+                  {String(row.count).padStart(2, "0")}
+                </div>
+
               </div>
-            </div>
-
-            <div className="riskValue highText">
-              04
-            </div>
-
-          </div>
-
-
-          <div className="riskRow">
-
-            <div className="riskLabel">
-              <span className="riskIcon warning">
-                <FaBell />
-              </span>
-
-              <div>
-                <strong>Active Hazards</strong>
-                <small>Detected today</small>
-              </div>
-            </div>
-
-            <div className="riskValue warningText">
-              14
-            </div>
-
-          </div>
-
-
-          <div className="riskRow">
-
-            <div className="riskLabel">
-              <span className="riskIcon violation">
-                <FaHardHat />
-              </span>
-
-              <div>
-                <strong>Safety Violations</strong>
-                <small>PPE & site violations</small>
-              </div>
-            </div>
-
-            <div className="riskValue violationText">
-              08
-            </div>
-
-          </div>
-
-
-          <div className="riskRow">
-
-            <div className="riskLabel">
-              <span className="riskIcon safe">
-                <FaShieldAlt />
-              </span>
-
-              <div>
-                <strong>Safe Zones</strong>
-                <small>Operating normally</small>
-              </div>
-            </div>
-
-            <div className="riskValue safeText">
-              18
-            </div>
-
-          </div>
+            );
+          })}
 
         </div>
 
@@ -136,76 +160,27 @@ function RiskMonitoring() {
           </div>
 
 
-          <div className="incident">
+          {incidentRows.map((incident, index) => {
+            const visual = incidentVisual(incident, index);
+            return (
+              <div className="incident" key={incident.id ?? index}>
 
-            <div className="incidentIcon danger">
-              <FaExclamationTriangle />
-            </div>
+                <div className={`incidentIcon ${visual.iconClass}`}>
+                  {visual.icon}
+                </div>
 
-            <div className="incidentInfo">
-              <strong>PPE Violation</strong>
-              <p>3 workers without helmets — Site A</p>
-            </div>
+                <div className="incidentInfo">
+                  <strong>{incident.type}</strong>
+                  <p>{incident.description}{incident.location ? ` — ${incident.location}` : ""}</p>
+                </div>
 
-            <span className="incidentTime">
-              5 min
-            </span>
+                <span className="incidentTime">
+                  {incident.time_ago}
+                </span>
 
-          </div>
-
-
-          <div className="incident">
-
-            <div className="incidentIcon warning">
-              <FaBell />
-            </div>
-
-            <div className="incidentInfo">
-              <strong>Weather Warning</strong>
-              <p>Heavy rainfall expected — Zone B</p>
-            </div>
-
-            <span className="incidentTime">
-              18 min
-            </span>
-
-          </div>
-
-
-          <div className="incident">
-
-            <div className="incidentIcon equipment">
-              <FaHardHat />
-            </div>
-
-            <div className="incidentInfo">
-              <strong>Equipment Alert</strong>
-              <p>Excavator EX-04 requires inspection</p>
-            </div>
-
-            <span className="incidentTime">
-              32 min
-            </span>
-
-          </div>
-
-
-          <div className="incident">
-
-            <div className="incidentIcon safe">
-              <FaCheckCircle />
-            </div>
-
-            <div className="incidentInfo">
-              <strong>Zone C Cleared</strong>
-              <p>Safety inspection completed successfully</p>
-            </div>
-
-            <span className="incidentTime">
-              1 hr
-            </span>
-
-          </div>
+              </div>
+            );
+          })}
 
         </div>
 
@@ -233,17 +208,17 @@ function RiskMonitoring() {
         <div className="statusMetrics">
 
           <div>
-            <strong>24/7</strong>
+            <strong>{siteStatus?.monitoring || "24/7"}</strong>
             <span>Monitoring</span>
           </div>
 
           <div>
-            <strong>32</strong>
+            <strong>{siteStatus?.zones ?? 32}</strong>
             <span>Zones</span>
           </div>
 
           <div>
-            <strong>98%</strong>
+            <strong>{siteStatus?.sensor_health != null ? `${siteStatus.sensor_health}%` : "98%"}</strong>
             <span>Sensor Health</span>
           </div>
 

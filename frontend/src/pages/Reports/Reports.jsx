@@ -8,14 +8,44 @@ import {
   FaFileAlt,
   FaShieldAlt,
   FaExclamationTriangle,
-  FaHardHat,
   FaRobot,
   FaCalendarAlt,
-  FaArrowUp,
-  FaArrowDown
+  FaArrowUp
 } from "react-icons/fa";
 
+import { endpoints } from "../../api/client";
+import { useApiAll } from "../../api/useApi";
+import { ErrorState, Skeleton } from "../../components/States/States";
+
+const FILE_ICON_FALLBACK = [<FaFileAlt />, <FaShieldAlt />, <FaCalendarAlt />, <FaRobot />];
+
+const PROGRESS_FILLS = ["blueProgress", "greenProgress", "purpleProgress", "orangeProgress"];
+
+function fileIcon(report, index) {
+  const key = (report.color || "").toLowerCase();
+  if (key.includes("3b82f6") || key === "blue") return { icon: <FaFileAlt />, color: "blue" };
+  if (key.includes("10b981") || key === "green") return { icon: <FaShieldAlt />, color: "green" };
+  if (key.includes("f59e0b") || key === "orange") return { icon: <FaCalendarAlt />, color: "orange" };
+  if (key.includes("8b5cf6") || key === "purple") return { icon: <FaRobot />, color: "purple" };
+  const fallback = ["blue", "green", "orange", "purple"][index % 4];
+  return { icon: FILE_ICON_FALLBACK[index % FILE_ICON_FALLBACK.length], color: fallback };
+}
+
+function progressNumber(value) {
+  const n = parseInt(value, 10);
+  return Number.isFinite(n) ? n : 0;
+}
+
 function Reports() {
+  const { results, loading, error, retry } = useApiAll([
+    endpoints.reportsSummary,
+    endpoints.reports,
+    endpoints.reportsPerformance,
+    endpoints.reportsInsight,
+  ]);
+
+  const [summary, reports, performance, insight] = results;
+
   return (
     <>
       <Sidebar />
@@ -52,427 +82,262 @@ function Reports() {
           </div>
 
 
-          {/* =========================
-              REPORT SUMMARY
-          ========================= */}
+          {loading && <Skeleton lines={6} />}
 
-          <div className="reportSummary">
+          {error && <ErrorState message={error} onRetry={retry} />}
 
-            <div className="reportCard">
+          {!loading && !error && (
+            <>
+              {/* =========================
+                  REPORT SUMMARY
+              ========================= */}
 
-              <div className="reportIcon blue">
-                <FaFileAlt />
-              </div>
+              <div className="reportSummary">
 
-              <span>Total Reports</span>
+                <div className="reportCard">
 
-              <strong>24</strong>
-
-              <small>
-                +4 this month
-              </small>
-
-            </div>
-
-
-            <div className="reportCard">
-
-              <div className="reportIcon green">
-                <FaShieldAlt />
-              </div>
-
-              <span>Safety Score</span>
-
-              <strong>96%</strong>
-
-              <small className="positive">
-                <FaArrowUp /> 3% improvement
-              </small>
-
-            </div>
-
-
-            <div className="reportCard">
-
-              <div className="reportIcon orange">
-                <FaExclamationTriangle />
-              </div>
-
-              <span>Risk Events</span>
-
-              <strong>14</strong>
-
-              <small className="negative">
-                <FaArrowUp /> 4% this week
-              </small>
-
-            </div>
-
-
-            <div className="reportCard">
-
-              <div className="reportIcon purple">
-                <FaRobot />
-              </div>
-
-              <span>AI Insights</span>
-
-              <strong>38</strong>
-
-              <small className="positive">
-                12 acted upon
-              </small>
-
-            </div>
-
-          </div>
-
-
-          {/* =========================
-              PERFORMANCE
-          ========================= */}
-
-          <section className="performancePanel">
-
-            <div className="reportSectionHeader">
-
-              <div>
-                <h2>Project Performance</h2>
-
-                <p>
-                  Current construction performance indicators
-                </p>
-              </div>
-
-              <span className="periodBadge">
-                This Month
-              </span>
-
-            </div>
-
-
-            <div className="performanceGrid">
-
-
-              {/* Progress */}
-
-              <div className="performanceItem">
-
-                <div className="performanceTop">
-                  <span>Project Progress</span>
-                  <strong>72%</strong>
-                </div>
-
-                <div className="reportProgress">
-                  <div
-                    className="reportProgressFill blueProgress"
-                    style={{ width: "72%" }}
-                  ></div>
-                </div>
-
-                <small>
-                  Target: 80%
-                </small>
-
-              </div>
-
-
-              {/* Safety */}
-
-              <div className="performanceItem">
-
-                <div className="performanceTop">
-                  <span>Safety Compliance</span>
-                  <strong>96%</strong>
-                </div>
-
-                <div className="reportProgress">
-                  <div
-                    className="reportProgressFill greenProgress"
-                    style={{ width: "96%" }}
-                  ></div>
-                </div>
-
-                <small>
-                  Target: 95%
-                </small>
-
-              </div>
-
-
-              {/* Quality */}
-
-              <div className="performanceItem">
-
-                <div className="performanceTop">
-                  <span>Quality Score</span>
-                  <strong>93%</strong>
-                </div>
-
-                <div className="reportProgress">
-                  <div
-                    className="reportProgressFill purpleProgress"
-                    style={{ width: "93%" }}
-                  ></div>
-                </div>
-
-                <small>
-                  Target: 90%
-                </small>
-
-              </div>
-
-
-              {/* Schedule */}
-
-              <div className="performanceItem">
-
-                <div className="performanceTop">
-                  <span>Schedule Health</span>
-                  <strong>78%</strong>
-                </div>
-
-                <div className="reportProgress">
-                  <div
-                    className="reportProgressFill orangeProgress"
-                    style={{ width: "78%" }}
-                  ></div>
-                </div>
-
-                <small>
-                  Target: 85%
-                </small>
-
-              </div>
-
-            </div>
-
-          </section>
-
-
-          {/* =========================
-              REPORT HISTORY
-          ========================= */}
-
-          <section className="reportHistory">
-
-            <div className="reportSectionHeader">
-
-              <div>
-                <h2>
-                  <FaFileAlt />
-                  Recent Reports
-                </h2>
-
-                <p>
-                  Generated project intelligence reports
-                </p>
-              </div>
-
-            </div>
-
-
-            <div className="reportTable">
-
-              <div className="reportTableHeader">
-                <span>Report</span>
-                <span>Type</span>
-                <span>Generated</span>
-                <span>Status</span>
-                <span>Action</span>
-              </div>
-
-
-              <div className="reportRow">
-
-                <div className="reportName">
-                  <div className="fileIcon blue">
+                  <div className="reportIcon blue">
                     <FaFileAlt />
                   </div>
 
-                  <div>
-                    <strong>
-                      Weekly Risk Assessment
-                    </strong>
+                  <span>Total Reports</span>
 
-                    <small>
-                      RPT-2026-042
-                    </small>
-                  </div>
+                  <strong>{summary?.total_reports ?? 0}</strong>
+
+                  <small>
+                    +4 this month
+                  </small>
+
                 </div>
 
-                <span>Risk</span>
 
-                <span>
-                  Today, 10:30 AM
-                </span>
+                <div className="reportCard">
 
-                <span className="completedReport">
-                  Completed
-                </span>
-
-                <button className="downloadButton">
-                  <FaDownload />
-                </button>
-
-              </div>
-
-
-              <div className="reportRow">
-
-                <div className="reportName">
-                  <div className="fileIcon green">
+                  <div className="reportIcon green">
                     <FaShieldAlt />
                   </div>
 
-                  <div>
-                    <strong>
-                      Safety Performance Report
-                    </strong>
+                  <span>Safety Score</span>
 
-                    <small>
-                      RPT-2026-041
-                    </small>
-                  </div>
+                  <strong>{summary?.safety_score ?? 0}%</strong>
+
+                  <small className="positive">
+                    <FaArrowUp /> 3% improvement
+                  </small>
+
                 </div>
 
-                <span>Safety</span>
 
-                <span>
-                  Yesterday, 4:15 PM
-                </span>
+                <div className="reportCard">
 
-                <span className="completedReport">
-                  Completed
-                </span>
-
-                <button className="downloadButton">
-                  <FaDownload />
-                </button>
-
-              </div>
-
-
-              <div className="reportRow">
-
-                <div className="reportName">
-                  <div className="fileIcon orange">
-                    <FaCalendarAlt />
+                  <div className="reportIcon orange">
+                    <FaExclamationTriangle />
                   </div>
 
-                  <div>
-                    <strong>
-                      Schedule Performance
-                    </strong>
+                  <span>Risk Events</span>
 
-                    <small>
-                      RPT-2026-040
-                    </small>
-                  </div>
+                  <strong>{summary?.risk_events ?? 0}</strong>
+
+                  <small className="negative">
+                    <FaArrowUp /> 4% this week
+                  </small>
+
                 </div>
 
-                <span>Schedule</span>
 
-                <span>
-                  2 days ago
-                </span>
+                <div className="reportCard">
 
-                <span className="completedReport">
-                  Completed
-                </span>
-
-                <button className="downloadButton">
-                  <FaDownload />
-                </button>
-
-              </div>
-
-
-              <div className="reportRow">
-
-                <div className="reportName">
-                  <div className="fileIcon purple">
+                  <div className="reportIcon purple">
                     <FaRobot />
                   </div>
 
-                  <div>
-                    <strong>
-                      AI Intelligence Summary
-                    </strong>
+                  <span>AI Insights</span>
 
-                    <small>
-                      RPT-2026-039
-                    </small>
-                  </div>
+                  <strong>{summary?.ai_insights ?? 0}</strong>
+
+                  <small className="positive">
+                    12 acted upon
+                  </small>
+
                 </div>
-
-                <span>AI</span>
-
-                <span>
-                  3 days ago
-                </span>
-
-                <span className="completedReport">
-                  Completed
-                </span>
-
-                <button className="downloadButton">
-                  <FaDownload />
-                </button>
 
               </div>
 
-            </div>
 
-          </section>
+              {/* =========================
+                  PERFORMANCE
+              ========================= */}
 
+              <section className="performancePanel">
 
-          {/* =========================
-              AI REPORT INSIGHT
-          ========================= */}
+                <div className="reportSectionHeader">
 
-          <section className="reportInsight">
+                  <div>
+                    <h2>Project Performance</h2>
 
-            <div className="insightRobot">
-              <FaRobot />
-            </div>
+                    <p>
+                      Current construction performance indicators
+                    </p>
+                  </div>
 
-            <div>
+                  <span className="periodBadge">
+                    This Month
+                  </span>
 
-              <h3>
-                AI Report Insight
-              </h3>
-
-              <p>
-                Overall project performance remains stable.
-                Safety compliance is above target, while schedule
-                health requires additional monitoring due to
-                increasing structural activity risks.
-              </p>
-
-            </div>
-
-            <div className="insightScore">
-              <span>AI Confidence</span>
-              <strong>94%</strong>
-            </div>
-
-          </section>
+                </div>
 
 
-          {/* Footer */}
+                <div className="performanceGrid">
 
-          <div className="reportsFooter">
+                  {(Array.isArray(performance) ? performance : []).map((metric, index) => (
+                    <div className="performanceItem" key={metric.id ?? index}>
 
-            <span>
-              Reports powered by Construction Intelligence Hub
-            </span>
+                      <div className="performanceTop">
+                        <span>{metric.label}</span>
+                        <strong>{metric.value}</strong>
+                      </div>
 
-            <span>
-              Last updated: 2 minutes ago
-            </span>
+                      <div className="reportProgress">
+                        <div
+                          className={`reportProgressFill ${PROGRESS_FILLS[index % PROGRESS_FILLS.length]}`}
+                          style={{ width: `${progressNumber(metric.value)}%` }}
+                        ></div>
+                      </div>
 
-          </div>
+                      <small>
+                        Target: {metric.target}
+                      </small>
+
+                    </div>
+                  ))}
+
+                </div>
+
+              </section>
+
+
+              {/* =========================
+                  REPORT HISTORY
+              ========================= */}
+
+              <section className="reportHistory">
+
+                <div className="reportSectionHeader">
+
+                  <div>
+                    <h2>
+                      <FaFileAlt />
+                      Recent Reports
+                    </h2>
+
+                    <p>
+                      Generated project intelligence reports
+                    </p>
+                  </div>
+
+                </div>
+
+
+                <div className="reportTable">
+
+                  <div className="reportTableHeader">
+                    <span>Report</span>
+                    <span>Type</span>
+                    <span>Generated</span>
+                    <span>Status</span>
+                    <span>Action</span>
+                  </div>
+
+
+                  {(Array.isArray(reports) ? reports : []).map((report, index) => {
+                    const visual = fileIcon(report, index);
+                    return (
+                      <div className="reportRow" key={report.id ?? index}>
+
+                        <div className="reportName">
+                          <div className={`fileIcon ${visual.color}`}>
+                            {visual.icon}
+                          </div>
+
+                          <div>
+                            <strong>
+                              {report.name}
+                            </strong>
+
+                            <small>
+                              {report.code}
+                            </small>
+                          </div>
+                        </div>
+
+                        <span>{report.type}</span>
+
+                        <span>
+                          {report.generated_at}
+                        </span>
+
+                        <span className="completedReport">
+                          {report.status}
+                        </span>
+
+                        <button className="downloadButton" aria-label={`Download ${report.name}`}>
+                          <FaDownload />
+                        </button>
+
+                      </div>
+                    );
+                  })}
+
+                </div>
+
+              </section>
+
+
+              {/* =========================
+                  AI REPORT INSIGHT
+              ========================= */}
+
+              <section className="reportInsight">
+
+                <div className="insightRobot">
+                  <FaRobot />
+                </div>
+
+                <div>
+
+                  <h3>
+                    AI Report Insight
+                  </h3>
+
+                  <p>
+                    {insight?.text || "No insight available."}
+                  </p>
+
+                </div>
+
+                <div className="insightScore">
+                  <span>AI Confidence</span>
+                  <strong>{insight?.ai_confidence ?? 0}%</strong>
+                </div>
+
+              </section>
+
+
+              {/* Footer */}
+
+              <div className="reportsFooter">
+
+                <span>
+                  Reports powered by Construction Intelligence Hub
+                </span>
+
+                <span>
+                  Last updated: 2 minutes ago
+                </span>
+
+              </div>
+            </>
+          )}
 
         </div>
 

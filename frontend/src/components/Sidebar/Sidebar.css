@@ -256,10 +256,47 @@
    RESPONSIVE
 ========================= */
 
+.sidebarOverlay {
+    display: none;
+}
+
+@media (max-width: 900px) {
+
+    .sidebar {
+        width: min(280px, 85vw);
+
+        transform: translateX(-105%);
+
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar.open {
+        transform: none;
+    }
+
+    .sidebarOverlay {
+        display: block;
+
+        position: fixed;
+
+        inset: 0;
+
+        background: rgba(2, 6, 23, 0.5);
+
+        z-index: 999;
+
+        border: none;
+
+        padding: 0;
+
+        cursor: pointer;
+    }
+}
+
 @media (max-width: 800px) {
 
     .sidebar {
-        width: 220px;
+        width: min(280px, 85vw);
     }
 
     .navItem {

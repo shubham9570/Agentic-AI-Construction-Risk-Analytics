@@ -30,9 +30,11 @@
 
 .circle{
 
-    width:220px;
+    width:min(220px, 60vw);
 
-    height:220px;
+    height:min(220px, 60vw);
+
+    aspect-ratio:1 / 1;
 
     border-radius:50%;
 
@@ -51,9 +53,9 @@
 
 .innerCircle{
 
-    width:170px;
+    width:77%;
 
-    height:170px;
+    height:77%;
 
     background:white;
 
@@ -71,9 +73,19 @@
 
 .innerCircle h1{
 
-    font-size:45px;
+    font-size:clamp(28px, 6vw, 45px);
 
     color:#F59E0B;
+
+}
+
+@media (max-width: 650px) {
+
+    .riskGauge{
+
+        padding:18px;
+
+    }
 
 }
 

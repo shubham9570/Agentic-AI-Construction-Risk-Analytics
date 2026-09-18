@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from "react";
 import "./Sidebar.css";
 
 import {
@@ -11,10 +12,38 @@ import {
 
 import { NavLink } from "react-router-dom";
 
-function Sidebar() {
-  return (
-    <aside className="sidebar">
+import { SIDEBAR_TOGGLE_EVENT } from "./sidebarBus";
 
+function Sidebar() {
+  const [open, setOpen] = useState(false);
+
+  const close = useCallback(() => setOpen(false), []);
+
+  useEffect(() => {
+    function onToggle() {
+      setOpen((prev) => !prev);
+    }
+    function onKey(event) {
+      if (event.key === "Escape") setOpen(false);
+    }
+    window.addEventListener(SIDEBAR_TOGGLE_EVENT, onToggle);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener(SIDEBAR_TOGGLE_EVENT, onToggle);
+      window.removeEventListener("keydown", onKey);
+    };
+  }, []);
+
+  return (
+    <>
+      {open && (
+        <button
+          className="sidebarOverlay"
+          onClick={close}
+          aria-label="Close navigation menu"
+        />
+      )}
+      <aside className={`sidebar${open ? " open" : ""}`}>
       {/* Logo */}
       <div className="logo">
         <h2>BuildAI</h2>
@@ -26,7 +55,7 @@ function Sidebar() {
 
 
       {/* Navigation */}
-      <ul>
+      <ul onClick={close}>
 
         {/* Dashboard */}
         <li>
@@ -113,7 +142,8 @@ function Sidebar() {
 
       </ul>
 
-    </aside>
+      </aside>
+    </>
   );
 }
 

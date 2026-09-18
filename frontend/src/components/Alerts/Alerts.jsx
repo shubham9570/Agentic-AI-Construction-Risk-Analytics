@@ -8,7 +8,75 @@ import {
   FaCircle
 } from "react-icons/fa";
 
+import { endpoints } from "../../api/client";
+import { useApi } from "../../api/useApi";
+import { EmptyState, ErrorState, Skeleton } from "../States/States";
+
+const LEVEL_STYLES = {
+  CRITICAL: { rowClass: "critical", icon: <FaHardHat /> },
+  WARNING: { rowClass: "warning", icon: <FaCloudRain /> },
+  INFO: { rowClass: "info", icon: <FaTools /> },
+  RESOLVED: { rowClass: "success", icon: <FaCheckCircle /> },
+};
+
+function levelStyle(level, index) {
+  const key = (level || "").toUpperCase();
+  if (LEVEL_STYLES[key]) return LEVEL_STYLES[key];
+  const fallbacks = Object.values(LEVEL_STYLES);
+  return fallbacks[index % fallbacks.length];
+}
+
+function activeCount(alerts) {
+  return alerts.filter((a) => (a.status || "").toLowerCase() === "active").length;
+}
+
 function Alerts() {
+  const { data, loading, error, retry } = useApi(endpoints.alerts);
+
+  if (loading) {
+    return (
+      <div className="liveAlerts">
+        <div className="alertsHeader">
+          <div>
+            <h2>🚨 Live AI Alerts</h2>
+            <p>Real-time alerts detected by the intelligence system</p>
+          </div>
+        </div>
+        <Skeleton lines={4} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="liveAlerts">
+        <div className="alertsHeader">
+          <div>
+            <h2>🚨 Live AI Alerts</h2>
+            <p>Real-time alerts detected by the intelligence system</p>
+          </div>
+        </div>
+        <ErrorState message={error} onRetry={retry} />
+      </div>
+    );
+  }
+
+  const alerts = Array.isArray(data) ? data : [];
+
+  if (alerts.length === 0) {
+    return (
+      <div className="liveAlerts">
+        <div className="alertsHeader">
+          <div>
+            <h2>🚨 Live AI Alerts</h2>
+            <p>Real-time alerts detected by the intelligence system</p>
+          </div>
+        </div>
+        <EmptyState message="No alerts right now." />
+      </div>
+    );
+  }
+
   return (
     <div className="liveAlerts">
 
@@ -26,7 +94,7 @@ function Alerts() {
 
         <div className="activeAlerts">
           <FaCircle />
-          4 Active
+          {activeCount(alerts)} Active
         </div>
 
       </div>
@@ -34,120 +102,36 @@ function Alerts() {
 
       <div className="alertsList">
 
-        {/* PPE Alert */}
+        {alerts.map((alert, index) => {
+          const style = levelStyle(alert.level, index);
+          return (
+            <div className={`alertItem ${style.rowClass}`} key={alert.id ?? index}>
 
-        <div className="alertItem critical">
+              <div className="alertIcon">
+                {style.icon}
+              </div>
 
-          <div className="alertIcon">
-            <FaHardHat />
-          </div>
+              <div className="alertContent">
 
-          <div className="alertContent">
+                <div className="alertTitle">
+                  <strong>{alert.title}</strong>
 
-            <div className="alertTitle">
-              <strong>PPE Violation</strong>
+                  <span>{(alert.level || "").toUpperCase()}</span>
+                </div>
 
-              <span>CRITICAL</span>
+                <p>
+                  {alert.description}
+                </p>
+
+                <small>
+                  {alert.time_ago}
+                </small>
+
+              </div>
+
             </div>
-
-            <p>
-              3 workers detected without helmets — Site A
-            </p>
-
-            <small>
-              5 minutes ago
-            </small>
-
-          </div>
-
-        </div>
-
-
-        {/* Weather Alert */}
-
-        <div className="alertItem warning">
-
-          <div className="alertIcon">
-            <FaCloudRain />
-          </div>
-
-          <div className="alertContent">
-
-            <div className="alertTitle">
-              <strong>Weather Warning</strong>
-
-              <span>WARNING</span>
-            </div>
-
-            <p>
-              Heavy rainfall expected near Zone B
-            </p>
-
-            <small>
-              18 minutes ago
-            </small>
-
-          </div>
-
-        </div>
-
-
-        {/* Equipment Alert */}
-
-        <div className="alertItem info">
-
-          <div className="alertIcon">
-            <FaTools />
-          </div>
-
-          <div className="alertContent">
-
-            <div className="alertTitle">
-              <strong>Equipment Alert</strong>
-
-              <span>INFO</span>
-            </div>
-
-            <p>
-              Excavator EX-04 requires maintenance inspection
-            </p>
-
-            <small>
-              32 minutes ago
-            </small>
-
-          </div>
-
-        </div>
-
-
-        {/* Completed Alert */}
-
-        <div className="alertItem success">
-
-          <div className="alertIcon">
-            <FaCheckCircle />
-          </div>
-
-          <div className="alertContent">
-
-            <div className="alertTitle">
-              <strong>Safety Check Completed</strong>
-
-              <span>RESOLVED</span>
-            </div>
-
-            <p>
-              Zone C safety inspection completed successfully
-            </p>
-
-            <small>
-              1 hour ago
-            </small>
-
-          </div>
-
-        </div>
+          );
+        })}
 
       </div>
 

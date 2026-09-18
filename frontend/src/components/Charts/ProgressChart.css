@@ -8,4 +8,24 @@
 
   box-shadow: 0 5px 15px rgba(0,0,0,.08);
 
+  min-width: 0;
+
+  overflow: hidden;
+
+}
+
+.chart-card canvas {
+
+  max-width: 100%;
+
+}
+
+@media (max-width: 650px) {
+
+  .chart-card {
+
+    padding: 18px;
+
+  }
+
 }

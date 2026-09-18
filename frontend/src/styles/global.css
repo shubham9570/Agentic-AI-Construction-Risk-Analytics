@@ -37,3 +37,42 @@ a{
 ul{
     list-style:none;
 }
+
+/* =========================
+   RESPONSIVE GUARDS (any device)
+========================= */
+
+img,
+svg,
+canvas,
+video {
+    max-width: 100%;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+.tableWrapper,
+.hazardTable {
+    -webkit-overflow-scrolling: touch;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button {
+    min-height: 40px;
+}
+
+@media (max-width: 650px) {
+
+    h1 {
+        overflow-wrap: break-word;
+    }
+
+}

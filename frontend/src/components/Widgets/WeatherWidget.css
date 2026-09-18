@@ -8,6 +8,8 @@
 
     box-shadow:0 5px 15px rgba(0,0,0,.08);
 
+    min-width:0;
+
 }
 
 .widget-header{
@@ -28,11 +30,25 @@
 
     color:#2563EB;
 
+    flex-shrink:0;
+
 }
 
 .widget h2{
 
     margin:15px 0;
+
+    font-size:clamp(1.4rem, 4vw, 2rem);
+
+    overflow-wrap:anywhere;
+
+}
+
+.widget p{
+
+    margin:6px 0;
+
+    overflow-wrap:anywhere;
 
 }
 
@@ -51,5 +67,29 @@
     color:#DC2626;
 
     font-weight:600;
+
+    max-width:100%;
+
+}
+
+@media (max-width: 650px) {
+
+    .widget{
+
+        padding:18px;
+
+    }
+
+    .widget-header{
+
+        gap:8px;
+
+    }
+
+    .widget-icon{
+
+        font-size:20px;
+
+    }
 
 }

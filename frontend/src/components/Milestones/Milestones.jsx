@@ -7,7 +7,109 @@ import {
   FaHardHat
 } from "react-icons/fa";
 
+import { endpoints } from "../../api/client";
+import { useApi } from "../../api/useApi";
+import { EmptyState, ErrorState, Skeleton } from "../States/States";
+
+function statusMeta(status) {
+  const key = (status || "").toLowerCase();
+  if (key === "completed") {
+    return {
+      rowClass: "completed",
+      icon: <FaCheckCircle />,
+      badgeClass: "completedBadge",
+      badgeText: "Completed",
+    };
+  }
+  if (key === "in_progress" || key === "in progress" || key === "active") {
+    return {
+      rowClass: "active",
+      icon: <FaClock />,
+      badgeClass: "activeBadge",
+      badgeText: "In Progress",
+    };
+  }
+  return {
+    rowClass: "upcoming",
+    icon: <FaCircle />,
+    badgeClass: "upcomingBadge",
+    badgeText: "Upcoming",
+  };
+}
+
+function progressText(milestone, meta) {
+  if (meta.rowClass === "completed" || milestone.progress >= 100) {
+    return "100% Complete";
+  }
+  if (meta.rowClass === "active") {
+    return `${milestone.progress}% Complete`;
+  }
+  if (milestone.progress > 0) {
+    return `${milestone.progress}% Complete`;
+  }
+  return "Not Started";
+}
+
 function Milestones() {
+  const { data, loading, error, retry } = useApi(endpoints.milestones);
+
+  if (loading) {
+    return (
+      <section className="milestones">
+        <div className="milestoneHeader">
+          <div>
+            <h2>
+              <FaHardHat />
+              Project Milestones
+            </h2>
+            <p>Track major construction phases and project completion status</p>
+          </div>
+        </div>
+        <Skeleton lines={5} />
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="milestones">
+        <div className="milestoneHeader">
+          <div>
+            <h2>
+              <FaHardHat />
+              Project Milestones
+            </h2>
+            <p>Track major construction phases and project completion status</p>
+          </div>
+        </div>
+        <ErrorState message={error} onRetry={retry} />
+      </section>
+    );
+  }
+
+  const milestones = Array.isArray(data) ? data : [];
+
+  if (milestones.length === 0) {
+    return (
+      <section className="milestones">
+        <div className="milestoneHeader">
+          <div>
+            <h2>
+              <FaHardHat />
+              Project Milestones
+            </h2>
+            <p>Track major construction phases and project completion status</p>
+          </div>
+        </div>
+        <EmptyState message="No milestones yet." />
+      </section>
+    );
+  }
+
+  const overall = Math.round(
+    milestones.reduce((sum, m) => sum + (m.progress || 0), 0) / milestones.length
+  );
+
   return (
     <section className="milestones">
 
@@ -26,7 +128,7 @@ function Milestones() {
 
         <div className="projectProgress">
           <span>Overall Progress</span>
-          <strong>72%</strong>
+          <strong>{overall}%</strong>
         </div>
 
       </div>
@@ -34,197 +136,45 @@ function Milestones() {
 
       <div className="timeline">
 
-        {/* Planning */}
+        {milestones.map((milestone) => {
+          const meta = statusMeta(milestone.status);
+          const fillClass = `progressFill ${milestone.name.toLowerCase()}`;
+          return (
+            <div className={`milestone ${meta.rowClass}`} key={milestone.id ?? milestone.name}>
 
-        <div className="milestone completed">
-
-          <div className="timelineIcon">
-            <FaCheckCircle />
-          </div>
-
-          <div className="milestoneContent">
-
-            <div className="milestoneTop">
-              <div>
-                <h3>Planning</h3>
-                <p>Project planning and site preparation</p>
+              <div className="timelineIcon">
+                {meta.icon}
               </div>
 
-              <span className="completedBadge">
-                Completed
-              </span>
-            </div>
+              <div className="milestoneContent">
 
-            <div className="progressBar">
-              <div
-                className="progressFill planning"
-                style={{ width: "100%" }}
-              ></div>
-            </div>
+                <div className="milestoneTop">
+                  <div>
+                    <h3>{milestone.name}</h3>
+                    <p>{milestone.description}</p>
+                  </div>
 
-            <span className="progressText">
-              100% Complete
-            </span>
+                  <span className={meta.badgeClass}>
+                    {meta.badgeText}
+                  </span>
+                </div>
 
-          </div>
+                <div className="progressBar">
+                  <div
+                    className={fillClass}
+                    style={{ width: `${milestone.progress}%` }}
+                  ></div>
+                </div>
 
-        </div>
+                <span className="progressText">
+                  {progressText(milestone, meta)}
+                </span>
 
-
-        {/* Foundation */}
-
-        <div className="milestone completed">
-
-          <div className="timelineIcon">
-            <FaCheckCircle />
-          </div>
-
-          <div className="milestoneContent">
-
-            <div className="milestoneTop">
-
-              <div>
-                <h3>Foundation</h3>
-                <p>Foundation and structural base completed</p>
               </div>
 
-              <span className="completedBadge">
-                Completed
-              </span>
-
             </div>
-
-            <div className="progressBar">
-              <div
-                className="progressFill foundation"
-                style={{ width: "100%" }}
-              ></div>
-            </div>
-
-            <span className="progressText">
-              100% Complete
-            </span>
-
-          </div>
-
-        </div>
-
-
-        {/* Structure */}
-
-        <div className="milestone active">
-
-          <div className="timelineIcon">
-            <FaClock />
-          </div>
-
-          <div className="milestoneContent">
-
-            <div className="milestoneTop">
-
-              <div>
-                <h3>Structure</h3>
-                <p>Building structure and framework construction</p>
-              </div>
-
-              <span className="activeBadge">
-                In Progress
-              </span>
-
-            </div>
-
-            <div className="progressBar">
-              <div
-                className="progressFill structure"
-                style={{ width: "75%" }}
-              ></div>
-            </div>
-
-            <span className="progressText">
-              75% Complete
-            </span>
-
-          </div>
-
-        </div>
-
-
-        {/* Roofing */}
-
-        <div className="milestone upcoming">
-
-          <div className="timelineIcon">
-            <FaCircle />
-          </div>
-
-          <div className="milestoneContent">
-
-            <div className="milestoneTop">
-
-              <div>
-                <h3>Roofing</h3>
-                <p>Roof installation and weather protection</p>
-              </div>
-
-              <span className="upcomingBadge">
-                Upcoming
-              </span>
-
-            </div>
-
-            <div className="progressBar">
-              <div
-                className="progressFill roofing"
-                style={{ width: "0%" }}
-              ></div>
-            </div>
-
-            <span className="progressText">
-              Not Started
-            </span>
-
-          </div>
-
-        </div>
-
-
-        {/* Finishing */}
-
-        <div className="milestone upcoming">
-
-          <div className="timelineIcon">
-            <FaCircle />
-          </div>
-
-          <div className="milestoneContent">
-
-            <div className="milestoneTop">
-
-              <div>
-                <h3>Finishing</h3>
-                <p>Interior finishing and final inspection</p>
-              </div>
-
-              <span className="upcomingBadge">
-                Upcoming
-              </span>
-
-            </div>
-
-            <div className="progressBar">
-              <div
-                className="progressFill finishing"
-                style={{ width: "0%" }}
-              ></div>
-            </div>
-
-            <span className="progressText">
-              Not Started
-            </span>
-
-          </div>
-
-        </div>
+          );
+        })}
 
       </div>
 

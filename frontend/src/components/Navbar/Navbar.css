@@ -26,6 +26,49 @@
 
 
 /* =========================
+   HAMBURGER (mobile only)
+========================= */
+
+.menuButton {
+  display: none;
+
+  width: 44px;
+
+  height: 44px;
+
+  min-width: 44px;
+
+  border: none;
+
+  background: transparent;
+
+  border-radius: 12px;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+
+  color: #2563eb;
+
+  font-size: 20px;
+}
+
+.menuButton:hover {
+  background: #eff6ff;
+}
+
+@media (max-width: 900px) {
+
+  .menuButton {
+    display: flex;
+  }
+
+}
+
+
+/* =========================
    TITLE
 ========================= */
 
@@ -170,7 +213,7 @@
 ========================= */
 
 .notification-dropdown {
-  width: 350px;
+  width: min(350px, calc(100vw - 32px));
 }
 
 .notification-dropdown h3 {
@@ -253,7 +296,7 @@
 ========================= */
 
 .profile-dropdown {
-  width: 260px;
+  width: min(260px, calc(100vw - 32px));
 
   padding: 10px 0;
 }
@@ -386,8 +429,49 @@
   }
 
   .notification-dropdown {
-    width: 300px;
+    width: min(300px, calc(100vw - 32px));
 
     right: -70px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .navbar {
+    height: auto;
+
+    min-height: 64px;
+
+    padding: 10px 14px;
+
+    gap: 10px;
+  }
+
+  .navbar-title h2 {
+    font-size: clamp(15px, 4.5vw, 17px);
+  }
+
+  .navbar-title p {
+    display: none;
+  }
+
+  .notification-dropdown {
+    position: fixed;
+
+    top: 70px;
+
+    left: 16px;
+
+    right: 16px;
+
+    width: auto;
+  }
+
+  .profile-dropdown {
+    position: fixed;
+
+    top: 70px;
+
+    right: 16px;
   }
 }

@@ -6,7 +6,86 @@ import {
   FaArrowDown
 } from "react-icons/fa";
 
+import { endpoints } from "../../api/client";
+import { useApi } from "../../api/useApi";
+import { ErrorState, Skeleton } from "../States/States";
+
+const VIEW_W = 700;
+const VIEW_H = 250;
+
+function toY(value) {
+  const clamped = Math.max(0, Math.min(100, value));
+  return VIEW_H - (clamped / 100) * 220;
+}
+
+function toX(index, count) {
+  if (count <= 1) return VIEW_W / 2;
+  return (index / (count - 1)) * VIEW_W;
+}
+
+function buildPaths(points) {
+  const coords = points.map((p, i) => ({
+    x: Math.round(toX(i, points.length) * 10) / 10,
+    y: Math.round(toY(p.value) * 10) / 10,
+  }));
+  const line = coords.map((c) => `${c.x},${c.y}`).join(" ");
+  const area =
+    coords.map((c) => `L${c.x} ${c.y}`).join(" ") +
+    ` L${VIEW_W} ${VIEW_H} L0 ${VIEW_H} Z`;
+  const areaPath = area.startsWith("L")
+    ? `M${area.slice(1)}`
+    : `M0 ${VIEW_H} ${area}`;
+  return { line, areaPath, coords };
+}
+
 function RiskTrend() {
+  const { data, loading, error, retry } = useApi(endpoints.riskTrend(7));
+
+  if (loading) {
+    return (
+      <section className="riskTrend">
+        <div className="riskTrendHeader">
+          <div>
+            <h2>
+              <FaChartLine />
+              Risk Trend Analytics
+            </h2>
+            <p>Weekly analysis of construction site risk levels</p>
+          </div>
+          <div className="trendStatus">Last 7 Days</div>
+        </div>
+        <Skeleton lines={4} />
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="riskTrend">
+        <div className="riskTrendHeader">
+          <div>
+            <h2>
+              <FaChartLine />
+              Risk Trend Analytics
+            </h2>
+            <p>Weekly analysis of construction site risk levels</p>
+          </div>
+          <div className="trendStatus">Last 7 Days</div>
+        </div>
+        <ErrorState message={error} onRetry={retry} />
+      </section>
+    );
+  }
+
+  const points = Array.isArray(data?.data) ? data.data : [];
+  const current = data?.current ?? 0;
+  const previous = data?.previous ?? 0;
+  const change = data?.change ?? 0;
+  const rising = change >= 0;
+  const { line, areaPath, coords } = buildPaths(
+    points.length ? points : [{ day: "", value: 0 }]
+  );
+
   return (
     <section className="riskTrend">
 
@@ -38,18 +117,18 @@ function RiskTrend() {
 
         <div>
           <span>Current Risk</span>
-          <strong>72%</strong>
+          <strong>{current}%</strong>
         </div>
 
         <div>
           <span>Previous Week</span>
-          <strong>68%</strong>
+          <strong>{previous}%</strong>
         </div>
 
         <div className="trendIncrease">
-          <FaArrowUp />
+          {rising ? <FaArrowUp /> : <FaArrowDown />}
           <span>Risk Change</span>
-          <strong>+4%</strong>
+          <strong>{rising ? `+${change}%` : `${change}%`}</strong>
         </div>
 
       </div>
@@ -80,7 +159,7 @@ function RiskTrend() {
 
           <svg
             className="trendSvg"
-            viewBox="0 0 700 250"
+            viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
             preserveAspectRatio="none"
           >
 
@@ -114,19 +193,7 @@ function RiskTrend() {
             {/* Area */}
 
             <path
-              d="
-                M0 135
-                L100 115
-                L200 130
-                L300 90
-                L400 105
-                L500 75
-                L600 95
-                L700 70
-                L700 250
-                L0 250
-                Z
-              "
+              d={areaPath}
               fill="url(#riskGradient)"
             />
 
@@ -134,16 +201,7 @@ function RiskTrend() {
             {/* Risk Line */}
 
             <polyline
-              points="
-                0,135
-                100,115
-                200,130
-                300,90
-                400,105
-                500,75
-                600,95
-                700,70
-              "
+              points={line}
               fill="none"
               stroke="#2563EB"
               strokeWidth="4"
@@ -154,14 +212,9 @@ function RiskTrend() {
 
             {/* Points */}
 
-            <circle cx="0" cy="135" r="5" fill="#2563EB" />
-            <circle cx="100" cy="115" r="5" fill="#2563EB" />
-            <circle cx="200" cy="130" r="5" fill="#2563EB" />
-            <circle cx="300" cy="90" r="5" fill="#2563EB" />
-            <circle cx="400" cy="105" r="5" fill="#2563EB" />
-            <circle cx="500" cy="75" r="5" fill="#2563EB" />
-            <circle cx="600" cy="95" r="5" fill="#2563EB" />
-            <circle cx="700" cy="70" r="5" fill="#2563EB" />
+            {coords.map((c, i) => (
+              <circle key={i} cx={c.x} cy={c.y} r="5" fill="#2563EB" />
+            ))}
 
           </svg>
 
@@ -170,13 +223,9 @@ function RiskTrend() {
 
           <div className="xAxis">
 
-            <span>Mon</span>
-            <span>Tue</span>
-            <span>Wed</span>
-            <span>Thu</span>
-            <span>Fri</span>
-            <span>Sat</span>
-            <span>Sun</span>
+            {points.map((p, i) => (
+              <span key={i}>{p.day}</span>
+            ))}
 
           </div>
 
@@ -195,7 +244,9 @@ function RiskTrend() {
         </div>
 
         <p>
-          Risk level increased slightly this week
+          {rising
+            ? "Risk level increased slightly this week"
+            : "Risk level decreased this week"}
         </p>
 
       </div>

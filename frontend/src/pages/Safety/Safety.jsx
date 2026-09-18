@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "../../components/Sidebar/Sidebar";
+import { EmptyState, ErrorState, Skeleton } from "../../components/States/States";
+import { endpoints } from "../../api/client";
+import { useApi } from "../../api/useApi";
 import "./Safety.css";
 
 /* =========================================================
@@ -716,12 +719,14 @@ function PPEDetection() {
 
 function HazardDetection() {
 
-  const hazards = [
-    ["PPE Violation", "Zone B", "5 min ago", "Critical"],
-    ["Unsafe Equipment", "Zone A", "18 min ago", "High"],
-    ["Wet Surface", "Zone C", "32 min ago", "Medium"],
-    ["Electrical Hazard", "Basement", "45 min ago", "High"],
-  ];
+  const { data, loading, error, retry } = useApi(endpoints.hazards);
+
+  const hazards = Array.isArray(data) ? data : [];
+  const countBy = (level) =>
+    hazards.filter((h) => (h.severity || "").toLowerCase() === level).length;
+  const critical = countBy("critical");
+  const high = countBy("high");
+  const medium = countBy("medium");
 
   return (
 
@@ -747,7 +752,7 @@ function HazardDetection() {
         </div>
 
         <div className="active-status red-status">
-          ● 14 ACTIVE
+          ● {loading ? "…" : `${hazards.length} ACTIVE`}
         </div>
 
       </div>
@@ -757,17 +762,17 @@ function HazardDetection() {
 
         <div>
           <span>Critical</span>
-          <strong>3</strong>
+          <strong>{loading ? "…" : critical}</strong>
         </div>
 
         <div>
           <span>High</span>
-          <strong>5</strong>
+          <strong>{loading ? "…" : high}</strong>
         </div>
 
         <div>
           <span>Medium</span>
-          <strong>6</strong>
+          <strong>{loading ? "…" : medium}</strong>
         </div>
 
       </div>
@@ -790,58 +795,71 @@ function HazardDetection() {
           </div>
 
           <span className="danger-count">
-            14 Active
+            {loading ? "…" : `${hazards.length} Active`}
           </span>
 
         </div>
 
 
-        <div className="hazard-table">
+        {loading && <Skeleton lines={4} />}
 
-          <div className="table-head">
+        {error && <ErrorState message={error} onRetry={retry} />}
 
-            <span>Hazard</span>
-            <span>Location</span>
-            <span>Detected</span>
-            <span>Severity</span>
+        {!loading && !error && hazards.length === 0 && (
+          <EmptyState message="No active hazards." />
+        )}
 
-          </div>
+        {!loading && !error && hazards.length > 0 && (
+          <div className="hazard-table">
 
+            <div className="table-head">
 
-          {hazards.map((hazard, index) => (
-
-            <div
-              className="table-row"
-              key={index}
-            >
-
-              <span>
-                <strong>{hazard[0]}</strong>
-              </span>
-
-              <span>
-                {hazard[1]}
-              </span>
-
-              <span>
-                {hazard[2]}
-              </span>
-
-              <span>
-
-                <b
-                  className={`severity ${hazard[3].toLowerCase()}`}
-                >
-                  {hazard[3]}
-                </b>
-
-              </span>
+              <span>Hazard</span>
+              <span>Location</span>
+              <span>Detected</span>
+              <span>Severity</span>
 
             </div>
 
-          ))}
 
-        </div>
+            {hazards.map((hazard, index) => {
+              const severity = hazard.severity || "medium";
+              const label =
+                severity.charAt(0).toUpperCase() + severity.slice(1);
+              return (
+                <div
+                  className="table-row"
+                  key={hazard.id ?? index}
+                >
+
+                  <span>
+                    <strong>{hazard.name}</strong>
+                  </span>
+
+                  <span>
+                    {hazard.location}
+                  </span>
+
+                  <span>
+                    {hazard.time_ago}
+                  </span>
+
+                  <span>
+
+                    <b
+                      className={`severity ${severity.toLowerCase()}`}
+                    >
+                      {label}
+                    </b>
+
+                  </span>
+
+                </div>
+              );
+            })}
+
+          </div>
+        )}
 
       </div>
 
