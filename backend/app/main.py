@@ -41,6 +41,8 @@ from app.routers import (
     dashboard,
     hazards,
     milestones,
+    ml,
+    ppe,
     projects,
     recommendations,
     reports,
@@ -112,6 +114,8 @@ app.add_middleware(RequestLoggingMiddleware)
 
 app.include_router(auth.router)
 app.include_router(dashboard.router)
+app.include_router(ml.router)
+app.include_router(ppe.router)
 app.include_router(projects.router)
 app.include_router(milestones.router)
 app.include_router(alerts.router)
@@ -186,7 +190,7 @@ def health_detailed():
             ]:
                 try:
                     counts[model.__tablename__] = db.query(model).count()
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001 — per-table best effort
                     counts[model.__tablename__] = -1
                     logger.warning("count failed for %s: %s", model.__tablename__, e)
         finally:

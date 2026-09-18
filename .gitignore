@@ -107,9 +107,19 @@ reports/
 *.bak
 *.swp
 
-# ML models / large data
+# ML models / large data (binaries stay local — see docs/MODELS.md)
 *.joblib
 *.pkl
 *.h5
 *.pt
 *.pth
+*.onnx
+ml/models/*
+!ml/models/.gitkeep
+ppe_model/
+safety_models/
+risk_test_env/
+runs/
+test_images/
+test_videos/
+sounds/
