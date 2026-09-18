@@ -88,28 +88,37 @@ Agentic-AI-Construction-Risk-Analytics/
 │   │   │   ├── recommendation.py, risk_trend.py
 │   │   │   ├── ai_site_status.py, ai_module.py, ai_insight.py
 │   │   │   └── hazard.py, zone.py, report.py, performance_metric.py
-│   │   ├── schemas/              # 16 Pydantic v2 schemas (mirrors models)
-│   │   └── routers/              # 10 API routers (30 endpoints)
-│   │       ├── auth.py, dashboard.py, projects.py
-│   │       ├── milestones.py, alerts.py, recommendations.py
-│   │       ├── hazards.py, zones.py, risks.py
-│   │       └── aihub.py, reports.py
+│   │   ├── schemas/              # 17 Pydantic v2 schemas (mirrors models)
+│   │   ├── routers/              # 13 API routers (42 endpoints)
+│   │   │   ├── auth.py, dashboard.py, projects.py
+│   │   │   ├── milestones.py, alerts.py, recommendations.py
+│   │   │   ├── hazards.py, zones.py, risks.py
+│   │   │   ├── aihub.py, reports.py, ppe.py, ml.py
+│   │   └── services/             # Business logic (no route code)
+│   │       ├── ppe/              # YOLO PPE detection (detector, video, alerts, risk, logger)
+│   │       └── ml/               # sklearn registry + 8 predictors
 │   ├── seed.py                   # CSV-driven DB seeder (run once)
 │   ├── .env                      # Neon DB URL + JWT secret (gitignored)
 │   ├── .env.example              # Template
-│   ├── requirements.txt
+│   ├── requirements.txt          # Core API deps
+│   ├── requirements-ml.txt       # Optional: ultralytics, opencv, sklearn, torch
 │   └── README.md                 # Backend deep-dive
-├── frontend/                     # React 19 + Vite dashboard
+├── frontend/                     # React 19 + Vite dashboard (API-wired)
 │   ├── public/                   # Static assets
 │   ├── src/
-│   │   ├── App.jsx               # Route table (8 pages)
-│   │   ├── main.jsx              # Entry + BrowserRouter
-│   │   ├── pages/                # Dashboard, Projects, Safety, AIHub, ...
-│   │   └── components/           # Sidebar, Navbar, Cards, Charts, Tables, ...
+│   │   ├── App.jsx               # Route table (8 pages + /login + 404)
+│   │   ├── main.jsx              # Entry + BrowserRouter + AuthProvider
+│   │   ├── api/                  # client.js (JWT fetch), useApi.js hooks
+│   │   ├── context/              # AuthContext (login/logout/session)
+│   │   ├── pages/                # Dashboard, Projects, Safety, AIHub, Login, ...
+│   │   └── components/           # Sidebar, Navbar, Cards, Charts, Tables, States, ...
+│   ├── .env.example              # Optional VITE_API_URL override
 │   ├── package.json
 │   ├── vite.config.js            # Includes /api proxy → :8000
 │   └── index.html
-└── datasets/                     # CSV inputs for seed.py
+├── ml/models/.gitkeep           # Local model binaries go here (gitignored)
+├── docs/
+│   └── MODELS.md                 # 8 model cards + setup guide
     ├── projects.csv              # → projects table
     ├── weather_history.csv       # → risk_trends table
     ├── safety.csv
@@ -195,7 +204,12 @@ curl -H "Authorization: Bearer $TOKEN" http://localhost:8000/api/dashboard/kpis
 
 ## 📚 API Reference
 
-**30 endpoints total** — 4 public + 26 protected. Full interactive docs at **`/docs`**.
+**42 endpoints total** — 5 public + 37 protected. Full interactive docs at **`/docs`**.
+
+> PPE (`/api/ppe/*`) and ML (`/api/ml/*`) endpoints need optional extras:
+> `pip install -r backend/requirements-ml.txt`, plus model files under
+> `ml/models/` (see `docs/MODELS.md`). Without them they answer `503`
+> with a clear message instead of crashing.
 
 ### System (public)
 | Method | Endpoint   | Description                |
@@ -248,6 +262,26 @@ curl -H "Authorization: Bearer $TOKEN" http://localhost:8000/api/dashboard/kpis
 | `/api/reports/summary`                | Reports summary cards         |
 | `/api/reports/performance`            | Reports performance bars      |
 | `/api/reports/insight`                | AI report insight             |
+
+### PPE vision (protected) — needs `requirements-ml.txt` + model file
+| Method | Endpoint              | Returns                                  |
+|--------|-----------------------|------------------------------------------|
+| GET    | `/api/ppe/health`     | `{available, model_path, detail}`        |
+| POST   | `/api/ppe/detect`     | `{workers_detected, violations, workers[]}` (multipart image ≤10 MB) |
+
+### ML predictions (protected) — needs model files under `ml/models/`
+| Method | Endpoint                          | Returns                          |
+|--------|-----------------------------------|----------------------------------|
+| GET    | `/api/ml/models`                  | Availability status per model    |
+| POST   | `/api/ml/predict/safety-risk`     | `{prediction, source}`           |
+| POST   | `/api/ml/predict/injury`          | `{prediction, source}`           |
+| POST   | `/api/ml/predict/delay`           | `{prediction, raw, source}`      |
+| POST   | `/api/ml/predict/cost`            | `{prediction, source}`           |
+| POST   | `/api/ml/predict/schedule`        | `{prediction, source}`           |
+| POST   | `/api/ml/predict/project-delay`   | `{prediction, source}`           |
+| POST   | `/api/ml/predict/resource`        | `{prediction, source}`           |
+| POST   | `/api/ml/predict/compliance`      | `{prediction, source}`           |
+| POST   | `/api/ml/predict/insurance`       | `{prediction, source}`           |
 
 ---
 
