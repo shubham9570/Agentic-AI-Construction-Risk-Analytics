@@ -21,6 +21,67 @@ them via `GET /api/ml/models` and `POST /api/ml/predict/*`.
 
 Or set `MODEL_DIR` env var to the teammate OneDrive folder directly.
 
+## Install (one-time)
+
+```bash
+cd backend
+pip install -r requirements-ml.txt   # ultralytics, opencv, scikit-learn, torch
+```
+
+Core API works without this — only `/api/ppe/*` and `/api/ml/*` need it.
+Without model files these endpoints answer `503` with setup guidance.
+
+## Environment variables
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `MODEL_DIR` | `<repo>/ml/models` | Folder with `.pkl`/`.joblib` binaries |
+| `PPE_MODEL_PATH` | `ppe_model/ppe_detection_best.pt` | YOLO `.pt` file path |
+| `PPE_ALARM_ENABLED` | `false` | Play alarm sound on violation |
+| `PPE_ALARM_SOUND` | `sounds/mixkit-emergency-alert-alarm-1007.wav` | Alarm audio file |
+| `PPE_LOG_PATH` | `logs/violations.csv` | Violation CSV log path |
+
+## Example calls (all need `Authorization: Bearer <token>`)
+
+```bash
+# 1. Check what's available
+curl -H "Authorization: Bearer $TOKEN" http://localhost:8000/api/ml/models
+
+# 2. Safety-risk prediction (typed schema)
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"helmet":1,"vest":1,"gloves":0,"safety_shoes":1}' \
+  http://localhost:8000/api/ml/predict/safety-risk
+
+# 3. Delay prediction (typed schema)
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"workers":109,"budget":25080668,"progress":84,"weather_rain":0,"weather_sunny":1}' \
+  http://localhost:8000/api/ml/predict/delay
+
+# 4. Generic feature-dict model (injury/schedule/resource/compliance/...)
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"features":{"Workers":109,"Budget":25080668}}' \
+  http://localhost:8000/api/ml/predict/resource
+
+# 5. PPE health + image detection
+curl -H "Authorization: Bearer $TOKEN" http://localhost:8000/api/ppe/health
+curl -X POST -H "Authorization: Bearer $TOKEN" \
+  -F "file=@site-photo.jpg" \
+  http://localhost:8000/api/ppe/detect
+```
+
+## Troubleshooting
+
+| Symptom | Fix |
+|---------|-----|
+| `503 Model ... not found` | Copy the `.pkl`/`.joblib` into `ml/models/` (exact filenames in table above) |
+| `503 ultralytics/opencv not installed` | `pip install -r backend/requirements-ml.txt` |
+| `503 PPE model not found` | Set `PPE_MODEL_PATH` to the YOLO `.pt` file |
+| `joblib load fails / version warning` | Match teammate's sklearn version (`pip install "scikit-learn~=1.5.0"`) |
+| Empty `{}` features accepted but wrong result | Generic endpoints use model column order — pass full feature dict |
+
 ## Model cards (from teammate metadata)
 
 | # | Endpoint | Model | Features | Metrics |
