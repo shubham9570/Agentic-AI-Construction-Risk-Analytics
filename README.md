@@ -35,7 +35,7 @@ A full-stack monorepo delivering real-time risk intelligence, AI-driven safety m
 ┌──────────────────┐         ┌────────────────────┐         ┌──────────────────────┐
 │   Browser        │         │   Vite Dev Server  │         │   FastAPI Backend    │
 │  React 19 SPA    │  HTTP   │   localhost:5173   │  Proxy  │   localhost:8000     │
-│  (Hardcoded JSX) │ ◄─────► │   /api/* proxy     │ ◄─────► │   30 REST endpoints  │
+│  (API-wired)     │ ◄─────► │   /api/* proxy     │ ◄─────► │   42 REST endpoints  │
 └──────────────────┘         └────────────────────┘         └──────────┬───────────┘
                                                                          │ SQL (SSL)
                                                                          ▼
@@ -62,7 +62,7 @@ A full-stack monorepo delivering real-time risk intelligence, AI-driven safety m
 |             | SQLAlchemy 2.0 (declarative ORM)                    | 2.0.36+          |
 |             | Pydantic v2                                         | 2.9+             |
 |             | pydantic-settings                                   | 2.6+             |
-| **Auth**    | python-jose (JWT) + bcrypt                          | 3.3 / 4.0        |
+| **Auth**    | PyJWT + bcrypt + slowapi (rate limit)               | 2.8 / 4.0 / 0.1  |
 | **DB**      | PostgreSQL via Neon Cloud (SSL)                     | 14+              |
 |             | psycopg v3 (binary driver)                          | 3.2+             |
 | **Data**    | pandas (CSV ingestion in seed.py)                   | 2.0+             |
@@ -119,6 +119,7 @@ Agentic-AI-Construction-Risk-Analytics/
 ├── ml/models/.gitkeep           # Local model binaries go here (gitignored)
 ├── docs/
 │   └── MODELS.md                 # 8 model cards + setup guide
+└── datasets/                     # CSV inputs for seed.py
     ├── projects.csv              # → projects table
     ├── weather_history.csv       # → risk_trends table
     ├── safety.csv
@@ -175,11 +176,17 @@ Email:    admin@buildai.com
 Password: admin123
 ```
 
+Open http://localhost:5173 — you will be redirected to `/login`.
+Sign in with the demo credentials to reach the dashboard. Every page
+fetches live data from the backend (with loading skeletons and retry
+on errors).
+
 ---
 
 ## 🔐 Authentication
 
 The API uses **JWT bearer tokens** (HS256, 60-min expiry).
+Login is rate-limited to **10 attempts/minute** per IP (returns `429` when exceeded).
 
 ### Flow
 ```
@@ -216,6 +223,7 @@ curl -H "Authorization: Bearer $TOKEN" http://localhost:8000/api/dashboard/kpis
 |--------|------------|----------------------------|
 | GET    | `/`        | API root status            |
 | GET    | `/health`  | Database connection status |
+| GET    | `/health/detailed` | DB status + per-table row counts |
 
 ### Auth (public + protected)
 | Method | Endpoint             | Auth     | Description                |
@@ -347,6 +355,10 @@ Edit `backend/.env` (template at `backend/.env.example`):
 | `JWT_ALGORITHM`                | ❌        | `HS256`                                                          | JWT algorithm                          |
 | `ACCESS_TOKEN_EXPIRE_MINUTES`  | ❌        | `60`                                                             | Token lifetime in minutes              |
 | `CORS_ORIGINS`                 | ❌        | `http://localhost:5173,http://localhost:3000`                     | Comma-separated allowed origins        |
+| `MODEL_DIR`                    | ❌        | `<repo>/ml/models`                                                | Folder with `.pkl`/`.joblib` binaries  |
+| `PPE_MODEL_PATH`               | ❌        | `ppe_model/ppe_detection_best.pt`                                 | YOLO PPE `.pt` file path               |
+| `PPE_ALARM_ENABLED`            | ❌        | `false`                                                           | Play alarm sound on violation          |
+| `VITE_API_URL` *(frontend)*    | ❌        | *(unset → Vite proxy)*                                            | Direct backend URL (production)        |
 
 ---
 
@@ -420,7 +432,26 @@ The frontend delivers 8 routed pages:
 | `/reports`    | Reports           | Summary, performance, history, insight  |
 | `/settings`   | Settings          | (placeholder)                           |
 
-> The frontend currently uses **hardcoded JSX values** matching the seeded DB 1:1, so dashboards render correctly even without fetching. The backend endpoints are designed with response shapes that match each component's needs, so a future integration is a drop-in `useEffect(fetch(...))` per component.
+> The frontend is **fully API-wired**: every page fetches live data through
+> `src/api/client.js` (JWT attached automatically) with loading skeletons,
+> error states + retry, and empty states. Unauthenticated visits redirect to
+> `/login`. On small screens the sidebar becomes an off-canvas drawer (☰ in
+> the navbar) and all grids collapse to a single column — no horizontal
+> scrolling on any device.
+
+---
+
+## 🩺 Troubleshooting
+
+| Symptom | Cause | Fix |
+|---------|-------|-----|
+| UI shows “Cannot reach the API” | Backend not running | Start it: `cd backend && uvicorn app.main:app --port 8000` |
+| Redirected to `/login` repeatedly | Token expired (60 min) or invalid | Sign in again |
+| `401` on every request | Missing `Authorization: Bearer <token>` header | Log in via `/api/auth/login` first |
+| `429` on login | Rate limit (10/min per IP) | Wait a minute and retry |
+| `503` from `/api/ppe/*` or `/api/ml/*` | Model file / heavy dep missing | `pip install -r backend/requirements-ml.txt`, place binaries under `ml/models/` (see `docs/MODELS.md`) |
+| `health` → `degraded` | DB unreachable | Check `DATABASE_URL` in `backend/.env`, verify Neon is up |
+| Sidebar covers content on mobile | — | Not a bug: tap ☰ in the navbar to open/close the drawer |
 
 ---
 
