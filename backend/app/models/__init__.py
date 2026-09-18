@@ -16,13 +16,13 @@ from app.models.user import User
 from app.models.zone import Zone
 
 __all__ = [
+    "KPI",
     "AIInsight",
     "AIModule",
     "AISiteStatus",
     "Alert",
     "Hazard",
     "Incident",
-    "KPI",
     "Milestone",
     "PerformanceMetric",
     "Project",
